@@ -51,6 +51,8 @@ public class MainActivity extends BaseActivity {
     NavigationDrawerFragment mNavigationDrawerFragment;
     private View mFragmentContainerView;
 
+    private final int MenuItemSettings = 0;
+
     MainFragment mMainFragment;
     RelaxFragment mRelaxFragment;
     public static final long TWO_SECOND = 2 * 1000;
@@ -75,7 +77,9 @@ public class MainActivity extends BaseActivity {
     private void initView() {
 
         ab = getActionBar();
+        ab.setIcon(R.drawable.ic_drawer);
         ab.setHomeButtonEnabled(true);
+        ab.setDisplayShowHomeEnabled(true);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (mMainFragment == null) {
@@ -124,7 +128,12 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        super.onCreateOptionsMenu(menu);
+//        MenuItem settings = menu.add(0, MenuItemSettings, 0, getString(R.string.title_settings));
+//
+//
+//        settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -134,16 +143,15 @@ public class MainActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        if (item.getItemId() == android.R.id.home) {
-//            if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
-//                mDrawerLayout.closeDrawer(mFragmentContainerView);
-//            } else {
-//                mDrawerLayout.openDrawer(mFragmentContainerView);
-//            }
-        }
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+
+        switch (item.getItemId()) {
+            case R.id.menuitem_settings:
+            case MenuItemSettings:
+                Log.d(TAG,"MenuItem Click:MenuItemSettings");
+                SettingsFragment.launch(MainActivity.this);
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
