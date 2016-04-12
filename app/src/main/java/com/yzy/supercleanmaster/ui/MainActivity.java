@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -32,13 +34,13 @@ import java.util.Date;
 import butterknife.InjectView;
 
 
-public class MainActivity extends BaseActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends BaseActivity {
 
     @InjectView(R.id.container)
     FrameLayout container;
 
-    @InjectView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+//    @InjectView(R.id.drawer_layout)
+//    DrawerLayout mDrawerLayout;
 
     ActionBar ab;
     private CharSequence mTitle;
@@ -58,55 +60,73 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFragmentContainerView = (View) findViewById(R.id.navigation_drawer);
-        mTitle = getTitle();
+//        mFragmentContainerView = (View) findViewById(R.id.navigation_drawer);
+//        mTitle = getTitle();
        applyKitKatTranslucency();
 
-        onNavigationDrawerItemSelected(0);
-        initDrawer();
+//        onNavigationDrawerItemSelected(0);
+//        initDrawer();
 
+        initView();
+
+
+    }
+
+    private void initView() {
+
+        ab = getActionBar();
+        ab.setHomeButtonEnabled(true);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (mMainFragment == null) {
+            mMainFragment = new MainFragment();
+            transaction.add(R.id.container, mMainFragment);
+        } else {
+            transaction.show(mMainFragment);
+        }
+        transaction.commit();
 
     }
 
 
     private void initDrawer() {
         // TODO Auto-generated method stub
-        ab = getActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);// 给home icon的左边加上一个返回的图标
-        ab.setHomeButtonEnabled(true);// 需要api level 14 使用home-icon 可点击
-
-        drawerArrow = new DrawerArrowDrawable(this) {
-            @Override
-            public boolean isLayoutRtl() {
-                return false;
-            }
-        };
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                drawerArrow, R.string.drawer_open, R.string.drawer_close) {
-
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+//        ab = getActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);// 给home icon的左边加上一个返回的图标
+////        ab.setHomeButtonEnabled(true);// 需要api level 14 使用home-icon 可点击
+//
+//        drawerArrow = new DrawerArrowDrawable(this) {
+//            @Override
+//            public boolean isLayoutRtl() {
+//                return false;
+//            }
+//        };
+//        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+//                drawerArrow, R.string.drawer_open, R.string.drawer_close) {
+//
+//            public void onDrawerClosed(View view) {
+//                super.onDrawerClosed(view);
+//                invalidateOptionsMenu();
+//            }
+//
+//            public void onDrawerOpened(View drawerView) {
+//                super.onDrawerOpened(drawerView);
+//                invalidateOptionsMenu();
+//            }
+//        };
+//        mDrawerLayout.setDrawerListener(mDrawerToggle);
+//        mDrawerToggle.syncState();
 //        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
 //                mDrawerLayout);
 
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,11 +135,11 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         // as you specify a parent activity in AndroidManifest.xml.
 
         if (item.getItemId() == android.R.id.home) {
-            if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
-                mDrawerLayout.closeDrawer(mFragmentContainerView);
-            } else {
-                mDrawerLayout.openDrawer(mFragmentContainerView);
-            }
+//            if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
+//                mDrawerLayout.closeDrawer(mFragmentContainerView);
+//            } else {
+//                mDrawerLayout.openDrawer(mFragmentContainerView);
+//            }
         }
         int id = item.getItemId();
         if (id == R.id.action_settings) {
@@ -131,13 +151,13 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+//        mDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+//        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     /**
@@ -176,48 +196,48 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
         win.setAttributes(winParams);
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // 开启一个Fragment事务
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
-        hideFragments(transaction);
-
-        switch (position) {
-            case 0:
-                closeDrawer();
-                if (mMainFragment == null) {
-                    mMainFragment = new MainFragment();
-                    transaction.add(R.id.container, mMainFragment);
-                } else {
-                    transaction.show(mMainFragment);
-                }
-                transaction.commit();
-
-                break;
-            case 1:
-                closeDrawer();
-                if (mRelaxFragment == null) {
-                    mRelaxFragment = new RelaxFragment();
-                    transaction.add(R.id.container, mRelaxFragment);
-                } else {
-                    transaction.show(mRelaxFragment);
-                }
-                transaction.commit();
-
-                break;
-            case 2:
-
-                closeDrawer();
-                SettingsFragment.launch(MainActivity.this);
-                break;
-
-            // fragment = new SettingsFragment();
-            // break;
-        }
-
-
-    }
+//    @Override
+//    public void onNavigationDrawerItemSelected(int position) {
+//        // 开启一个Fragment事务
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
+//        hideFragments(transaction);
+//
+//        switch (position) {
+//            case 0:
+//                closeDrawer();
+//                if (mMainFragment == null) {
+//                    mMainFragment = new MainFragment();
+//                    transaction.add(R.id.container, mMainFragment);
+//                } else {
+//                    transaction.show(mMainFragment);
+//                }
+//                transaction.commit();
+//
+//                break;
+//            case 1:
+//                closeDrawer();
+//                if (mRelaxFragment == null) {
+//                    mRelaxFragment = new RelaxFragment();
+//                    transaction.add(R.id.container, mRelaxFragment);
+//                } else {
+//                    transaction.show(mRelaxFragment);
+//                }
+//                transaction.commit();
+//
+//                break;
+//            case 2:
+//
+//                closeDrawer();
+//                SettingsFragment.launch(MainActivity.this);
+//                break;
+//
+//            // fragment = new SettingsFragment();
+//            // break;
+//        }
+//
+//
+//    }
 
     private void hideFragments(FragmentTransaction transaction) {
         if (mMainFragment != null) {
@@ -230,9 +250,9 @@ public class MainActivity extends BaseActivity implements NavigationDrawerFragme
     }
 
 
-    public void closeDrawer() {
-        mDrawerLayout.closeDrawers();
-    }
+//    public void closeDrawer() {
+//        mDrawerLayout.closeDrawers();
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

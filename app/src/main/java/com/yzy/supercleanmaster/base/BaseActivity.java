@@ -29,6 +29,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected ImageView titleBack;
 	protected TextView titleName;
 	protected TextView titleRightText;
+	protected  final String TAG = getClass().getSimpleName();
 
 	private static String mDialogTag = "basedialog";
 
